@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Styles from "./App.module.scss";
 import AppContext from "./context/AppContext";
 import SchedulesPage from "./features/SchedulesPage/SchedulesPage";
@@ -16,7 +16,7 @@ function App() {
 
   const [schedules, setSchedules] = useState<Schedule[]>([]);
 
-  const fetchSchedules = async () => {
+  const fetchSchedules = useCallback(async () => {
     try {
       const { data } = await axios.get<Schedule[]>(ENDPOINTS.Schedules);
 
@@ -24,17 +24,22 @@ function App() {
     } catch (error) {
       logError(error);
     }
-  };
+  }, []);
 
-  const updateSchedules = async (scheduleId: number, isRetired?: boolean) => {
-    try {
-      await axios.patch(`${ENDPOINTS.Schedules}/${scheduleId}`, { isRetired });
+  const updateSchedules = useCallback(
+    async (scheduleId: number, isRetired?: boolean) => {
+      try {
+        await axios.patch(`${ENDPOINTS.Schedules}/${scheduleId}`, {
+          isRetired,
+        });
 
-      await fetchSchedules();
-    } catch (error) {
-      logError(error);
-    }
-  };
+        await fetchSchedules();
+      } catch (error) {
+        logError(error);
+      }
+    },
+    [fetchSchedules]
+  );
 
   useEffect(() => {
     void fetchSchedules();

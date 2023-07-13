@@ -1,0 +1,60 @@
+.ScheduleCard {
+  &Container {
+    padding: 16px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &Header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &Title {
+      flex: 1;
+      display: -webkit-box;
+      line-clamp: 1;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+    }
+
+    &TaskCount {
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      border-radius: 100%;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75em;
+    }
+  }
+
+  &Body {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  &Actions {
+    display: flex;
+    justify-content: flex-end;
+
+    &Button {
+      background-color: rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+  }
+}

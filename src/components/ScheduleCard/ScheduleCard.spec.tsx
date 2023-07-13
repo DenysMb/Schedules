@@ -1,10 +1,14 @@
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import ScheduleCard from "./ScheduleCard";
 import { WrapperWithContext, mockSchedules } from "../../setupTests";
 
 describe("ScheduleCard", () => {
+  const updateSchedules = jest.fn();
+  const setScheduleId = jest.fn();
+
   const wrapper = (
-    <WrapperWithContext>
+    <WrapperWithContext value={{ updateSchedules, setScheduleId }}>
       <ScheduleCard schedule={mockSchedules[0]} />
     </WrapperWithContext>
   );
@@ -21,31 +25,26 @@ describe("ScheduleCard", () => {
     expect(getByText(mockSchedules[0].tasksCount)).toBeInTheDocument();
   });
 
-  it("should call setScheduleId when schedule card is clicked", () => {
-    const mockSetScheduleId = jest.fn();
-
+  it("should call selectSchedule when schedule card is clicked", async () => {
     const { getByText } = render(wrapper);
 
     const cardTitle = getByText(mockSchedules[0].name);
 
-    fireEvent.click(cardTitle);
+    await userEvent.click(cardTitle);
 
-    waitFor(() => {
-      expect(mockSetScheduleId).toHaveBeenCalledWith(1);
-    });
+    expect(setScheduleId).toHaveBeenCalledWith(mockSchedules[0].id);
   });
 
-  it("should call updateSchedules with the correct parameters when retire/unretire button is clicked", () => {
-    const mockUpdateSchedules = jest.fn();
-
+  it("should call retireOrUnretireSchedule with the correct parameters when retire/unretire button is clicked", async () => {
     const { getByText } = render(wrapper);
 
     const retireButton = getByText("Unretire");
 
-    fireEvent.click(retireButton);
+    await userEvent.click(retireButton);
 
-    waitFor(() => {
-      expect(mockUpdateSchedules).toHaveBeenCalledWith(1, true);
-    });
+    expect(updateSchedules).toHaveBeenCalledWith(
+      mockSchedules[0].id,
+      !mockSchedules[0].isRetired
+    );
   });
 });
